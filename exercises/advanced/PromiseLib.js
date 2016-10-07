@@ -15,7 +15,21 @@ var Promise = require('bluebird');
  */
 
 var promisify = function(nodeStyleFn) {
- // TODO
+  return function() {
+    var arg;
+    if (arguments.length > 0) {
+      arg = arguments[0];
+    }
+    return new Promise(function(resolve, reject) {
+      nodeStyleFn(arg, function(err, results) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    })
+  }
 };
 
 
@@ -31,7 +45,24 @@ var promisify = function(nodeStyleFn) {
  */
 
 var all = function(arrayOfPromises) {
-  // TODO
+  return new Promise(function(resolve, reject) {
+    var arrayOfOutputs = [];
+    var counter = arrayOfPromises.length;
+    arrayOfPromises.forEach(function(promise, i) {
+      promise.then( result => {
+        arrayOfOutputs.push([i, result]);
+        counter--;
+        if (counter === 0) {
+          arrayOfOutputs.sort(function(a, b) {
+            return a[0] - b[0];
+          })
+          resolve(arrayOfOutputs.map(x => x[1]));
+        }
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  })
 };
 
 

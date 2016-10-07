@@ -17,16 +17,18 @@ var firstLine = require('./promiseConstructor.js');
 var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
   return firstLine.pluckFirstLineFromFileAsync(readFilePath)
   .then(function(username) {
-    return github.getGitHubProfileAsync(username)
+    return github.getGitHubProfileAsync(username);
   })
   .then(function(jsonStr) {
-    console.log('LOG: ' + JSON.stringify(jsonStr));
     var promise = new Promise(function(resolve, reject) {
       fs.writeFile(writeFilePath, JSON.stringify(jsonStr), function(err) {
-        if (err) reject(err);
-        else resolve(writeFilePath);
-      })
-    })
+        if (err) {
+          reject(err);
+        } else {
+          resolve(writeFilePath);
+        }
+      });
+    });
     return promise;
   });
   

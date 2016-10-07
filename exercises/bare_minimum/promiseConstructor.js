@@ -12,8 +12,11 @@ var Promise = require('bluebird');
 var pluckFirstLineFromFileAsync = function(filePath) {
   var promise = new Promise(function(resolve, reject) {
     fs.readFile(filePath, function(err, results) {
-      if (err) reject(err);
-      else resolve(results.toString().split('\n')[0]);
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results.toString().split('\n')[0]);
+      }
     });
   });
   return promise;
@@ -23,9 +26,12 @@ var pluckFirstLineFromFileAsync = function(filePath) {
 var getStatusCodeAsync = function(url) {
   var promise = new Promise(function(resolve, reject) {
     request(url, function(err, res) {
-      if (err) reject(err);
-      else resolve(res.statusCode);
-    })
+      if (err) {
+        reject(err);
+      } else {
+        resolve(res.statusCode);
+      }
+    });
   });
   return promise;
 };
